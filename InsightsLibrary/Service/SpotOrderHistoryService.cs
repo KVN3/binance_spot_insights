@@ -28,6 +28,8 @@ namespace InsightsLibrary.Service
             var userTradesResult = await binanceClient.SpotApi.Trading.GetUserTradesAsync("GMTUSDT");
             userTradesResult.GetResultOrError(out IEnumerable<BinanceTrade> result, out Error error);
 
+
+
             return result;
         }
 

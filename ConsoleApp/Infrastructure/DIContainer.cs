@@ -36,7 +36,7 @@ namespace ConsoleApp.Infrastructure
 
             Settings settings = new Settings(configuration);
             services.AddSingleton(settings);
-
+            services.AddLogging();
             services.AddLibrary(settings.ApiCredentials);
 
             return services.BuildServiceProvider();
