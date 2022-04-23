@@ -13,7 +13,7 @@ namespace InsightsLibrary.Service
 {
     public interface ISpotOrderHistoryService
     {
-
+        Task<IEnumerable<BinanceTrade>> GetRealizedPNL();
     }
 
     public class SpotOrderHistoryService : BinanceService, ISpotOrderHistoryService

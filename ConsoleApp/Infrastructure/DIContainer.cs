@@ -25,12 +25,12 @@ namespace ConsoleApp.Infrastructure
 
         public static IServiceProvider Build()
         { 
-           IServiceCollection services = new ServiceCollection();
+           ServiceCollection services = new ServiceCollection();
 
             //Cloud uses environment variables, local uses local.settings.json
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("config.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
 

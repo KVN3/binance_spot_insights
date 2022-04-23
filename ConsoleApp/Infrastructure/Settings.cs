@@ -14,8 +14,8 @@ namespace ConsoleApp.Infrastructure
         {
             ApiCredentials = new ApiCredentials
             {
-                key = configuration["key"],
-                secret = configuration["secret"]
+                key = configuration["api_key"],
+                secret = configuration["api_secret"]
             };
         }
     }
