@@ -7,14 +7,16 @@ namespace InsightsLibrary.Model
 {
     public class TradeReport
     {
-        public readonly string symbol;
+        public string Symbol { get; }
         public DateTime Key { get; }
 
 
-        public decimal realizedPNL;
-        public decimal totalPNL;
+        public decimal RealizedPNL { get; private set; }
+        public decimal UnrealizedPNL { get; private set; }
 
         public List<BinanceTrade> trades = new List<BinanceTrade>();
+
+        public Position initialPosition;
         public Position position;
         public decimal accumlatedPositionValueDelta;
 
@@ -25,8 +27,15 @@ namespace InsightsLibrary.Model
         public TradeReport(DateTime key, string symbol, Position? inheritedPosition = null)
         {
             Key = key;
-            this.symbol = symbol;
+            Symbol = symbol;
+
+            initialPosition = inheritedPosition ?? new Position();
             position = inheritedPosition ?? new Position();
+        }
+
+        public void CalculateRealizedPNL()
+        {
+            RealizedPNL = -1 * (totalBuyQuantityValue + initialPosition.PositionValue - totalSellQuantityValue - position.PositionValue);
         }
     }
 

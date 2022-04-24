@@ -12,6 +12,7 @@ namespace InsightsLibrary.Model
 
         // From previous/current day
         private Position inheritedPosition;
+        private decimal inheritedValue;
 
         public TradeReportFactory()
         {
@@ -21,24 +22,12 @@ namespace InsightsLibrary.Model
         public async Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTrade> trades, string symbol)
         {
             this.tradeReport = new TradeReport(key, symbol, inheritedPosition);
+            this.inheritedValue = inheritedPosition.PositionValue;
 
             foreach (var trade in trades)
                 AppendTrade(trade);
 
-            tradeReport.realizedPNL = tradeReport.accumlatedPositionValueDelta;
-
-            // Position left open at the end of the day
-            if (tradeReport.position.IsOpen())
-            {
-                // Total PNL requires current price
-                //tradeReport.totalPNL = tradeReport.accumlatedPositionValueDelta - tradeReport.position.PositionValue;
-
-                // Account for open position
-                tradeReport.realizedPNL -= tradeReport.position.PositionValue;
-
-            }
-
-            tradeReport.realizedPNL *= -1;
+            tradeReport.CalculateRealizedPNL();
             inheritedPosition = tradeReport.position;
 
             return tradeReport;

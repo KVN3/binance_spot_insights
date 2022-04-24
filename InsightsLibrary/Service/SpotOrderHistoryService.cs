@@ -30,9 +30,6 @@ namespace InsightsLibrary.Service
             var userTradesResult = await binanceClient.SpotApi.Trading.GetUserTradesAsync(symbol);
             userTradesResult.GetResultOrError(out IEnumerable<BinanceTrade> result, out Error error);
 
-            // Loop all trades per day, any quantities left over at end of day are passed on to the next day
-            // Current/last day: ignore quantities bought which have not yet been sold
-
             var groups = result.GroupBy(key =>
                 new DateTime(year: key.Timestamp.Year, month: key.Timestamp.Month, day: key.Timestamp.Day));
 
@@ -47,6 +44,36 @@ namespace InsightsLibrary.Service
 
             return new TradeReportResult(reports);
         }
-
     }
 }
+
+
+//// Quick test, should result in 0.056
+//List<BinanceTrade> result = new List<BinanceTrade>();
+//result.Add(new BinanceTrade()
+//{
+//    Timestamp = DateTime.Now,
+//    Symbol = "ALGOUSDT",
+//    IsBuyer = true,
+//    Quantity = 11,
+//    Price = 0.9272m,
+//    QuoteQuantity = 10.1992m
+//});
+//result.Add(new BinanceTrade()
+//{
+//    Timestamp = DateTime.Now.AddHours(result.Count()),
+//    Symbol = "ALGOUSDT",
+//    IsBuyer = true,
+//    Quantity = 26,
+//    Price = 0.9244m,
+//    QuoteQuantity = 24.0344m
+//});
+//result.Add(new BinanceTrade()
+//{
+//    Timestamp = DateTime.Now.AddHours(result.Count()),
+//    Symbol = "ALGOUSDT",
+//    IsBuyer = false,
+//    Quantity = 15,
+//    Price = 0.929m,
+//    QuoteQuantity = 13.935m
+//});

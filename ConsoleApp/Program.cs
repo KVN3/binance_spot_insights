@@ -19,14 +19,14 @@ namespace ConsoleApp
 
             foreach (var report in result.reports)
             {
-                string message = $"{report.symbol} - {report.Key.ToString("dd-MM-yyyy")} | Realized PNL: {report.realizedPNL.ToString("0.##"),10} USDt | " +
+                string message = $"{report.Symbol} - {report.Key.ToString("dd-MM-yyyy")} | Realized PNL: {report.RealizedPNL.ToString("0.##"),10} USDt | " +
                     $"Buys: {report.totalBuys.ToString("0.##"),10} | Sells: {report.totalSells.ToString("0.##"),10} | " +
                     $"BuyQty: {report.totalBuyQuantity.ToString("0.##"),10} | SellQty: {report.totalSellQuantity.ToString("0.##"),10} ";
 
                 if (report.position.IsOpen())
                 {
                     message += $"| Position size of {report.position.AccumulatedQuantity.ToString("0.##"),5} " +
-                        $"at price of {report.position.PositionPrice.ToString("0.##")} USDt";
+                        $"at price of {report.position.PositionPrice.ToString("0.####")} USDt";
                 }
                 else
                 {

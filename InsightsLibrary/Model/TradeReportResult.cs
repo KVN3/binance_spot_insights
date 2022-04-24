@@ -23,7 +23,7 @@ namespace InsightsLibrary.Model
             {
                 totalBuys += report.totalBuys;
                 totalSells += report.totalSells;
-                totalRealizedPNL += report.realizedPNL;
+                totalRealizedPNL += report.RealizedPNL;
             }
         }
     }
