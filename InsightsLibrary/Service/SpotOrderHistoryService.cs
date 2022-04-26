@@ -20,9 +20,15 @@ namespace InsightsLibrary.Service
 
     public class SpotOrderHistoryService : BinanceService, ISpotOrderHistoryService
     {
-        public SpotOrderHistoryService(IBinanceClient binanceClient, ILogger<SpotOrderHistoryService> logger) : base(binanceClient, logger)
-        {
+        private List<BinanceTrade> userTrades;
+        private readonly ITradeReportFactory factory;
+        private readonly IBookService bookService;
 
+        public SpotOrderHistoryService(IBinanceClient binanceClient, ILogger<SpotOrderHistoryService> logger,
+            ITradeReportFactory factory, IBookService bookService) : base(binanceClient, logger)
+        {
+            this.factory = factory;
+            this.bookService = bookService;
         }
 
         public async Task<TradeReportResult> GetTradeReports(string symbol)
@@ -34,17 +40,14 @@ namespace InsightsLibrary.Service
 
             List<TradeReport> reports = new List<TradeReport>();
 
-            var factory = new TradeReportFactory();
             foreach (var group in groups)
             {
                 var report = await factory.Create(group.Key.Date, group.ToList(), symbol);
                 reports.Add(report);
             }
 
-            return new TradeReportResult(reports);
+            return new TradeReportResult(reports, bookService);
         }
-
-        private List<BinanceTrade> userTrades;
 
         private async Task GetAllUserTrades(string symbol, DateTime? startTime = null, DateTime? endTime = null)
         {

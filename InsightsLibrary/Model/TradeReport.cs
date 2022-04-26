@@ -80,6 +80,11 @@ namespace InsightsLibrary.Model
         {
             return AccumulatedQuantity > 0;
         }
+
+        public decimal GetCurrentPositionValue(decimal currentPrice)
+        {
+            return AccumulatedQuantity * currentPrice;
+        }
     }
 }
 

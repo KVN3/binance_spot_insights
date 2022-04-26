@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Objects.Models.Spot;
+using InsightsLibrary.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,17 +7,23 @@ using System.Threading.Tasks;
 
 namespace InsightsLibrary.Model
 {
-    public class TradeReportFactory
+    public interface ITradeReportFactory
     {
+        Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTrade> trades, string symbol);
+    }
+
+    public class TradeReportFactory : ITradeReportFactory
+    {
+        private readonly IBookService bookService;
         private TradeReport tradeReport;
 
         // From previous/current day
         private Position inheritedPosition;
         private decimal inheritedValue;
 
-        public TradeReportFactory()
+        public TradeReportFactory(IBookService bookService)
         {
-            
+            this.bookService = bookService;
         }
 
         public async Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTrade> trades, string symbol)

@@ -2,6 +2,7 @@
 using Binance.Net.Interfaces.Clients;
 using Binance.Net.Objects;
 using CryptoExchange.Net.Authentication;
+using InsightsLibrary.Model;
 using InsightsLibrary.Service;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,6 +33,8 @@ namespace InsightsLibrary.Infrastructure
             services.AddSingleton(binanceClient);
 
             services.AddTransient<ISpotOrderHistoryService, SpotOrderHistoryService>();
+            services.AddTransient<IBookService, BookService>();
+            services.AddTransient<ITradeReportFactory, TradeReportFactory>();
 
             return services;
         }

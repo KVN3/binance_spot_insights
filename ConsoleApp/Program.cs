@@ -36,9 +36,18 @@ namespace ConsoleApp
                 Console.WriteLine(message);
             }
 
+            decimal? unrealizedPNL = await result.GetUnrealizedPNL();
+            string unrealizedPNLMessage = "-";
+            if (unrealizedPNL != null)
+            {
+                decimal uPNL = unrealizedPNL ?? 0;
+                unrealizedPNLMessage = uPNL.ToString("0.##");
+            }
+
             Console.WriteLine();
             Console.WriteLine("Summary: ");
             Console.WriteLine($"{symbol}              | Realized PNL: {result.totalRealizedPNL.ToString("0.##"),10} USDt | " +
+                $"Unrealized PNL: {unrealizedPNLMessage,10} USDt | " +
                 $"Buys: {result.totalBuys.ToString("0.##"),10} | Sells: {result.totalSells.ToString("0.##"),10}");
 
             Console.ReadKey();
