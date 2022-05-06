@@ -4,6 +4,8 @@ using ConsoleApp.Infrastructure;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using DataRepository;
 
 namespace ConsoleApp
 {
@@ -11,7 +13,29 @@ namespace ConsoleApp
     {
         static async Task Main(string[] args)
         {
-            string symbol = "GMTUSDT";
+            new ConnectivityTest().TestConnectivity();
+
+            Console.ReadKey();
+        }
+
+        private static async Task WriteAllReports()
+        {
+            List<string> symbols = new List<string>()
+            {
+                "GMTUSDT",
+                "ALGOUSDT",
+                "APEUSDT",
+                "COMPUSDT"
+            };
+
+            foreach (string symbol in symbols)
+            {
+                await WriteConsoleReport(symbol);
+            }
+        }
+
+        private static async Task WriteConsoleReport(string symbol)
+        {
             var spotHistoryService = DIContainer.Instance.GetService<ISpotOrderHistoryService>();
             var result = await spotHistoryService.GetTradeReports(symbol);
 
@@ -49,8 +73,6 @@ namespace ConsoleApp
             Console.WriteLine($"{symbol}              | Realized PNL: {result.totalRealizedPNL.ToString("0.##"),10} USDt | " +
                 $"Unrealized PNL: {unrealizedPNLMessage,10} USDt | " +
                 $"Buys: {result.totalBuys.ToString("0.##"),10} | Sells: {result.totalSells.ToString("0.##"),10}");
-
-            Console.ReadKey();
         }
     }
 }

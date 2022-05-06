@@ -10,7 +10,7 @@ namespace InsightsLibrary.Infrastructure
 {
     public static class DependencyInjectionRegistry
     {
-        public static IServiceCollection AddLibrary(
+        public static IServiceCollection AddInsightsLibrary(
             this IServiceCollection services,
             Configuration.ApiCredentials apiCredentials)
         {

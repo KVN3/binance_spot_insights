@@ -56,7 +56,10 @@ namespace InsightsLibrary.Service
                 userTrades = new List<BinanceTrade>();
 
             var userTradesResult = await binanceClient.SpotApi.Trading.GetUserTradesAsync(symbol, startTime: startTime, endTime: endTime);
-            userTradesResult.GetResultOrError(out IEnumerable<BinanceTrade> result, out Error error);
+            bool isSuccess = userTradesResult.GetResultOrError(out IEnumerable<BinanceTrade> result, out Error error);
+
+            if (!isSuccess)
+                throw new Exception(error.Message);
 
             if (result != null && result.Count() > 0)
             {

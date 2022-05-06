@@ -12,10 +12,12 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\InsightsLibrary\InsightsLibrary.csproj" />
+		<ProjectReference Include="..\DataRepository\DataRepository.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
