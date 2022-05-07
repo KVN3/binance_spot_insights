@@ -73,6 +73,10 @@ namespace ConsoleApp
             Console.WriteLine($"{symbol}              | Realized PNL: {result.totalRealizedPNL.ToString("0.##"),10} USDt | " +
                 $"Unrealized PNL: {unrealizedPNLMessage,10} USDt | " +
                 $"Buys: {result.totalBuys.ToString("0.##"),10} | Sells: {result.totalSells.ToString("0.##"),10}");
+
+
+            Console.WriteLine("---");
+            Console.WriteLine();
         }
     }
 }
