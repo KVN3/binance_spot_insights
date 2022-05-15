@@ -12,6 +12,7 @@ namespace InsightsLibrary.Model
         private readonly IBookService bookService;
         public decimal totalBuys, totalSells;
         public decimal totalRealizedPNL;
+        public decimal totalFeesPaid;
 
         public TradeReportResult(List<TradeReport> reports, IBookService bookService)
         {
@@ -32,14 +33,27 @@ namespace InsightsLibrary.Model
         public async Task<decimal?> GetUnrealizedPNL()
         {
             if (reports.Count == 0)
-                return null;
+                return 0;
 
             string symbol = reports[0].Symbol;
 
             var bookInformation = await bookService.GetSymbolInformation(symbol);
             var currentReport = reports[reports.Count - 1];
 
-            return currentReport.position.PositionValue - currentReport.position.GetCurrentPositionValue(bookInformation.BestBidPrice);
+            return -1 * (currentReport.position.PositionValue - currentReport.position.GetCurrentPositionValue(bookInformation.BestBidPrice));
+        }
+
+        public async Task<decimal?> GetFeesPaid()
+        {
+            if (reports.Count == 0)
+                return 0;
+
+            foreach (var report in reports)
+            {
+                totalFeesPaid += report.totalFeeCost;
+            }
+
+            return totalFeesPaid;
         }
     }
 }

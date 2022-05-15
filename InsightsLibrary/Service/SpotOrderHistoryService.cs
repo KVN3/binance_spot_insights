@@ -106,7 +106,7 @@ namespace InsightsLibrary.Service
 
                 userTrades.InsertRange(0, newRange);
 
-                // Next iter
+                // Next iter, ?? TO DO
                 startTime = firstTradeInRange.Timestamp.AddDays(-1);
                 endTime = firstTradeInRange.Timestamp;
                 await GetAllUserTrades(symbol, startTime, endTime);

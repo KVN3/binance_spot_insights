@@ -35,6 +35,9 @@ namespace InsightsLibrary.Model
                 AppendTrade(trade);
 
             tradeReport.CalculateRealizedPNL();
+
+            tradeReport.totalFeeCost = await new FeeSummaryService(tradeReport, bookService).SummarizeFeeCost();
+
             inheritedPosition = tradeReport.position;
 
             return tradeReport;
@@ -44,6 +47,8 @@ namespace InsightsLibrary.Model
         {
             tradeReport.trades.Add(trade);
             tradeReport.position.AddEntry(trade);
+
+            tradeReport.AddFeeEntry(trade.FeeAsset, trade.Fee);
 
             if (trade.IsBuyer)
             {
@@ -60,5 +65,9 @@ namespace InsightsLibrary.Model
                 tradeReport.totalSells += 1;
             }
         }
+
+
+
+
     }
 }

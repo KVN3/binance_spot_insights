@@ -14,15 +14,20 @@ namespace InsightsLibrary.Model
         public decimal RealizedPNL { get; private set; }
         public decimal UnrealizedPNL { get; private set; }
 
+        // All fees and trades
         public List<BinanceTrade> trades = new List<BinanceTrade>();
+        public Dictionary<string, decimal> fees = new Dictionary<string, decimal>();
 
+        // Position
         public Position initialPosition;
         public Position position;
         public decimal accumlatedPositionValueDelta;
 
+        // Totals
         public int totalBuys, totalSells;
         public decimal totalBuyQuantity, totalSellQuantity;
         public decimal totalBuyQuantityValue, totalSellQuantityValue;
+        public decimal totalFeeCost;
 
         public TradeReport(DateTime key, string symbol, Position? inheritedPosition = null)
         {
@@ -36,6 +41,14 @@ namespace InsightsLibrary.Model
         public void CalculateRealizedPNL()
         {
             RealizedPNL = -1 * (totalBuyQuantityValue + initialPosition.PositionValue - totalSellQuantityValue - position.PositionValue);
+        }
+
+        public void AddFeeEntry(string feeAsset, decimal fee)
+        {
+            if (!fees.ContainsKey(feeAsset))
+                fees.Add(feeAsset, fee);
+            else
+                fees[feeAsset] += fee;
         }
     }
 
@@ -62,6 +75,10 @@ namespace InsightsLibrary.Model
             else
             {
                 AccumulatedQuantity -= trade.Quantity;
+
+                // TO DO: Dirty fix, potentially inaccurate with deposits and exchanges for another quote: i.e. buy with USDT, sell for BUSD -> not accounted for
+                if (AccumulatedQuantity < 0)
+                    AccumulatedQuantity = 0;
             }
         }
 
