@@ -28,9 +28,10 @@ namespace ConsoleApp
                 //"COMPUSDT",
                 //"APEUSDT",
                 //"ATOMUSDT",
-                "LUNABUSD"
+                "LUNABUSD",
                 //"ATOMUSDT",
-                //"FTMUSDT",
+                "FTMUSDT",
+                "APEUSDT"
                 //"ALGOUSDT"
             };
 

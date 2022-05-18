@@ -64,7 +64,7 @@ namespace InsightsLibrary.Service
                 else
                 {
 
-                ids.Add(item.trade.Id);
+                    ids.Add(item.trade.Id);
                 }
 
             }
@@ -77,6 +77,9 @@ namespace InsightsLibrary.Service
 
         private async Task RetrieveTrades(OrderPeriod period)
         {
+            if (period.isEndReached)
+                return;
+
             // Get results
             var userTradesResult = await binanceClient.SpotApi.Trading.GetUserTradesAsync(symbol, startTime: period.iterationStart, endTime: period.iterationEnd);
             if (!userTradesResult.GetResultOrError(out IEnumerable<BinanceTrade> result, out Error error))
@@ -90,8 +93,7 @@ namespace InsightsLibrary.Service
                 foreach (var trade in newTrades)
                     userTrades.Add(new BinanceTradeWrapper(trade));
 
-                if (!period.IsFullyTraversed(newTrades.Count))
-                    await RetrieveTrades(period.GoNext(newTrades));
+                await RetrieveTrades(period.GoNext(newTrades));
             }
 
             return;
@@ -103,23 +105,23 @@ namespace InsightsLibrary.Service
             public DateTime iterationStart;
             public DateTime iterationEnd;
 
-            private bool isRangeEndTimeReached;
+            public bool isEndReached;
 
-            public bool IsFullyTraversed(int lastTradeCount)
-            {
-                if (lastTradeCount == MAX_TRADES_PER_CALL)
-                    return false;
+            //public bool IsFullyTraversed(int lastTradeCount)
+            //{
+            //    if (lastTradeCount == MAX_TRADES_PER_CALL)
+            //        return false;
 
-                return isRangeEndTimeReached;
-            }
+            //    return isEndReached;
+            //}
 
             public OrderPeriod(TimeRange range)
             {
                 this.range = range;
                 this.iterationStart = (DateTime)range.start;
                 this.iterationEnd = DateTime.MinValue;
-                this.isRangeEndTimeReached = false;
-                SetIterationEnd();
+                this.isEndReached = false;
+                SetIterationEnd(0);
             }
 
             public OrderPeriod GoNext(List<BinanceTrade> newTrades)
@@ -128,8 +130,8 @@ namespace InsightsLibrary.Service
                     this.iterationStart = newTrades[newTrades.Count() - 1].Timestamp;
                 else
                     this.iterationStart = iterationEnd;
-                
-                SetIterationEnd();
+
+                SetIterationEnd(newTrades.Count);
 
                 return this;
             }
@@ -139,7 +141,7 @@ namespace InsightsLibrary.Service
                 return tradeCount == MAX_TRADES_PER_CALL;
             }
 
-            private void SetIterationEnd()
+            private void SetIterationEnd(int tradeCount)
             {
                 this.iterationEnd = this.iterationStart.AddHours(MAX_HOURS_PER_PERIOD);
 
@@ -147,7 +149,9 @@ namespace InsightsLibrary.Service
                 if (this.iterationEnd > this.range.end)
                 {
                     this.iterationEnd = (DateTime)this.range.end;
-                    this.isRangeEndTimeReached = true;
+
+                    if (!IsResultCapReached(tradeCount))
+                        this.isEndReached = true;
                 }
             }
         }
