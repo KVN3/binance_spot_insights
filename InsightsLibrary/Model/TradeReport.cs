@@ -67,6 +67,11 @@ namespace InsightsLibrary.Model
 
         public void AddEntry(BinanceTrade trade)
         {
+            //if (AccumulatedQuantity == 200000 || AccumulatedQuantity + trade.Quantity == 200000 || AccumulatedQuantity - trade.Quantity == 200000)
+            //{
+            //    var a = "";
+            //}
+
             if (trade.IsBuyer)
             {
                 SetPositionPrice(trade);
@@ -76,10 +81,15 @@ namespace InsightsLibrary.Model
             {
                 AccumulatedQuantity -= trade.Quantity;
 
-                // TO DO: Dirty fix, potentially inaccurate with deposits and exchanges for another quote: i.e. buy with USDT, sell for BUSD -> not accounted for
+                //// TO DO: Dirty fix, potentially inaccurate with deposits and exchanges for another quote: i.e. buy with USDT, sell for BUSD -> not accounted for
                 if (AccumulatedQuantity < 0)
                     AccumulatedQuantity = 0;
+
+                if (AccumulatedQuantity == 0)
+                    PositionPrice = 0;
             }
+
+
         }
 
         private void SetPositionPrice(BinanceTrade trade)

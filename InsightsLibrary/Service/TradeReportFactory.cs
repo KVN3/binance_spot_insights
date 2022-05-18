@@ -9,7 +9,7 @@ namespace InsightsLibrary.Model
 {
     public interface ITradeReportFactory
     {
-        Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTrade> trades, string symbol);
+        Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTradeWrapper> trades, string symbol);
     }
 
     public class TradeReportFactory : ITradeReportFactory
@@ -26,13 +26,13 @@ namespace InsightsLibrary.Model
             this.bookService = bookService;
         }
 
-        public async Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTrade> trades, string symbol)
+        public async Task<TradeReport> Create(DateTime key, IEnumerable<BinanceTradeWrapper> trades, string symbol)
         {
             this.tradeReport = new TradeReport(key, symbol, inheritedPosition);
             this.inheritedValue = inheritedPosition.PositionValue;
 
-            foreach (var trade in trades)
-                AppendTrade(trade);
+            foreach (var tradeWrapper in trades)
+                AppendTrade(tradeWrapper.trade);
 
             tradeReport.CalculateRealizedPNL();
 

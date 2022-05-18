@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using DataRepository;
+using InsightsLibrary.Model;
 
 namespace ConsoleApp
 {
@@ -25,9 +26,12 @@ namespace ConsoleApp
             {
                 //"FTMUSDT",
                 //"COMPUSDT",
-                "APEUSDT",
-                "ATOMUSDT",
+                //"APEUSDT",
+                //"ATOMUSDT",
                 "LUNABUSD"
+                //"ATOMUSDT",
+                //"FTMUSDT",
+                //"ALGOUSDT"
             };
 
             foreach (string symbol in symbols)
@@ -38,8 +42,12 @@ namespace ConsoleApp
 
         private static async Task WriteConsoleReport(string symbol)
         {
-            var spotHistoryService = DIContainer.Instance.GetService<ISpotOrderHistoryService>();
-            var result = await spotHistoryService.GetTradeReports(symbol);
+            var spotHistoryService = DIContainer.Instance.GetService<ISpotTradeReportingService>();
+            var result = await spotHistoryService.GetTradeReports(symbol, new TimeRange
+            {
+                start = new DateTime(year: 2022, month: 5, day: 12),
+                end = new DateTime(year: 2022, month: 5, day: 20)
+            });
 
             Console.WriteLine("");
 

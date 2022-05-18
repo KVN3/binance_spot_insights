@@ -31,8 +31,8 @@ namespace InsightsLibrary.Infrastructure
             });
 
             services.AddSingleton(binanceClient);
-
-            services.AddTransient<ISpotOrderHistoryService, SpotOrderHistoryService>();
+            services.AddSingleton<ISpotOrderHistoryRetrievalService, SpotOrderHistoryRetrievalService>();
+            services.AddTransient<ISpotTradeReportingService, SpotTradeReportingService>();
             services.AddTransient<IBookService, BookService>();
             services.AddTransient<ITradeReportFactory, TradeReportFactory>();
 
