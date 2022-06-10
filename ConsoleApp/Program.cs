@@ -16,7 +16,6 @@ namespace ConsoleApp
         {
             //new ConnectivityTest().TestConnectivity();
             await WriteAllReports();
-
             Console.ReadKey();
         }
 
@@ -24,15 +23,7 @@ namespace ConsoleApp
         {
             List<string> symbols = new List<string>()
             {
-                //"FTMUSDT",
-                //"COMPUSDT",
-                //"APEUSDT",
-                //"ATOMUSDT",
-                "LUNABUSD",
-                //"ATOMUSDT",
-                "FTMUSDT",
-                "APEUSDT"
-                //"ALGOUSDT"
+                "gmtusdt"
             };
 
             foreach (string symbol in symbols)
